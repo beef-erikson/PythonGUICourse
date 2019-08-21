@@ -1,7 +1,26 @@
 import os
 from random import shuffle
-from guizero import App, Box, Picture, PushButton, Text
+from guizero import App, Box, Picture, PushButton, Text, warn
 from random import randint
+
+# fields
+gameTimer = 20
+rounds = 0
+
+# timer countdown - ends game when time runs out
+def counter():
+    timer.value = int(timer.value) - 1
+    if int(timer.value) == 0:
+        # stops timer and shows game over
+        timer.cancel(counter)
+        result.text_color = "black"
+        result.value = "Game Over"
+        warn("Time Over", "You have ran out of time")
+        # resets timer/text, restarts game, and starts new timer
+        timer.value = gameTimer
+        result.value = ""
+        setup_round()
+        timer.repeat(1000, counter)
 
 
 # populates list of emojis and shuffles them
@@ -45,9 +64,15 @@ def setup_round():
     # sets the correct button to report true (the matched cell)
     buttons[random_button].update_command(match_emoji, [True])
 
+    # adds to round played
+    global rounds
+    rounds += 1
+    rounds_played.value = "Rounds played: " + str(rounds)
 
-# sets up widgets for the grid
-app = App("emoji match")
+
+# sets up widgets
+app = App("emoji match", width=320, height=530)
+rounds_played = Text(app, text="Rounds played: " + str(rounds))
 result = Text(app)
 game_box = Box(app)
 pictures_box = Box(game_box, layout="grid")
@@ -69,8 +94,16 @@ for x in range(0,3):
         button = PushButton(buttons_box, grid=[x,y])
         buttons.append(button)
 
+# sets timer text
+extra_features = Box(app)
+timer = Text(extra_features, text="Get Ready")
+
 # sets up a round
 setup_round()
+
+# starts timer
+timer.value = gameTimer
+timer.repeat(1000, counter)
 
 # starts app
 app.display()
