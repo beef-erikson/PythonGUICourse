@@ -9,7 +9,7 @@ rounds = 1
 correct_guesses = 0
 bonus_time = 10
 player = "One"
-leaderboard = []
+scores = []
 
 
 # changes player
@@ -29,6 +29,9 @@ def counter():
         global correct_guesses
         global rounds
 
+        # change player turn
+        change_player()
+        
         # stops timer and shows game over
         timer.cancel(counter)
         result.text_color = "black"
@@ -47,9 +50,6 @@ def counter():
         # adds to round count
         rounds += 1
         
-        # change player turn
-        change_player()
-        
         # restarts game
         setup_round()
         
@@ -66,7 +66,7 @@ def emoji_list():
 
 # displays leaderboard
 def leaderboard_display():
-    global leaderboard
+    global scores
 
 
 # sets result/score values if correct answer or not and creates a new round
@@ -138,9 +138,8 @@ buttons_box = Box(game_box, layout="grid")
 emojis_dir = "emojis"
 emojis = []
 
-# displays player's turn and changes to other player
+# displays player's turn
 info("Player Turn", "Player " + str(player) + "'s turn.")
-change_player()
 
 # creates the two grids using a list
 pictures = []
