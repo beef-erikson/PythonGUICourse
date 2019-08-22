@@ -1,6 +1,6 @@
 import os
 from random import shuffle
-from guizero import App, Box, Picture, PushButton, Text, warn
+from guizero import App, Box, Picture, PushButton, Text, warn, info
 from random import randint
 
 # fields
@@ -8,7 +8,9 @@ game_timer = 20
 rounds = 1
 correct_guesses = 0
 bonus_time = 10
-
+player = "one"
+player_one_score: 0
+player_two_score: 0
 
 # timer countdown - ends game when time runs out
 def counter():
@@ -31,6 +33,8 @@ def counter():
         score_bonus.value = ""
         # adds to round count
         rounds += 1
+        # shows player turn
+        player_turn()
         # restarts game
         setup_round()
         # starts new timer
@@ -66,6 +70,17 @@ def match_emoji(matched):
         score.value = int(score.value) - 1
         correct_guesses = 0
     setup_round()
+
+
+# shows player turn and changes player
+def player_turn():
+    global player
+    if player == "one":
+        info("Player Turn", "Player " + str(player) + "'s turn.")
+        player = "two"
+    else:
+        info("Player Turn", "Player " + str(player) + "'s turn.")
+        player = "one"
 
 
 # sets a round up
@@ -108,6 +123,9 @@ buttons_box = Box(game_box, layout="grid")
 # setup for emoji directory and creates empty list to populate
 emojis_dir = "emojis"
 emojis = []
+
+# displays player's turn
+player_turn()
 
 # creates the two grids using a list
 pictures = []
