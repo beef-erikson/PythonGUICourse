@@ -8,22 +8,34 @@ game_timer = 20
 rounds = 1
 correct_guesses = 0
 bonus_time = 10
-player = "one"
-player_one_score: 0
-player_two_score: 0
+player = "One"
+leaderboard = []
 
-# timer countdown - ends game when time runs out
+
+# changes player
+def change_player():
+    global player
+    if player == "One":
+        player = "Two"
+    else:
+        player = "One"
+
+
+# timer countdown / game over
 def counter():
     timer.value = int(timer.value) - 1
     if int(timer.value) == 0:
         global game_timer
         global correct_guesses
         global rounds
+
         # stops timer and shows game over
         timer.cancel(counter)
         result.text_color = "black"
         result.value = "Game Over"
-        warn("Time Over", "You have ran out of time!\nFinal Score: " + score.value)
+        warn("Game Over", "You have ran out of time!\nFinal Score: " + score.value + 
+            "\n\nPlayer " + str(player) + "'s turn.")
+        
         # resets variable values
         timer.value = game_timer
         result.value = ""
@@ -31,12 +43,16 @@ def counter():
         correct_guesses = 0
         game_timer = 20
         score_bonus.value = ""
+        
         # adds to round count
         rounds += 1
-        # shows player turn
-        player_turn()
+        
+        # change player turn
+        change_player()
+        
         # restarts game
         setup_round()
+        
         # starts new timer
         timer.repeat(1000, counter)
         
@@ -48,39 +64,37 @@ def emoji_list():
     shuffle(emojis)
 
 
+# displays leaderboard
+def leaderboard_display():
+    global leaderboard
+
+
 # sets result/score values if correct answer or not and creates a new round
 def match_emoji(matched):
     global correct_guesses
-    # resets score bonus text
+    
+    #  resets score bonus text
     score_bonus.value = ""
     if matched:
         result.text_color = "green"
         result.value = "correct"
         score.value = int(score.value) + 1
+        
         # bonus point for 3 correct guesses in a row
         correct_guesses += 1
         if correct_guesses == 3:
             global game_timer
             timer.value = int(timer.value) + bonus_time
-            score_bonus.value = "BONUS - 3 correct in a row! " + str(bonus_time) + " added to timer!"
+            score_bonus.value = "BONUS - 3 correct in a row! " + str(bonus_time) + " seconds added to timer!"
             correct_guesses = 0
     else:
         result.text_color = "red"
         result.value = "incorrect"
         score.value = int(score.value) - 1
         correct_guesses = 0
+    
+    # resets board
     setup_round()
-
-
-# shows player turn and changes player
-def player_turn():
-    global player
-    if player == "one":
-        info("Player Turn", "Player " + str(player) + "'s turn.")
-        player = "two"
-    else:
-        info("Player Turn", "Player " + str(player) + "'s turn.")
-        player = "one"
 
 
 # sets a round up
@@ -113,7 +127,7 @@ def setup_round():
 
 
 # sets up widgets
-app = App("emoji match", width=400, height=570)
+app = App("emoji match", width=420, height=574)
 rounds_played = Text(app, text="Rounds played: " + str(rounds))
 result = Text(app)
 game_box = Box(app)
@@ -124,8 +138,9 @@ buttons_box = Box(game_box, layout="grid")
 emojis_dir = "emojis"
 emojis = []
 
-# displays player's turn
-player_turn()
+# displays player's turn and changes to other player
+info("Player Turn", "Player " + str(player) + "'s turn.")
+change_player()
 
 # creates the two grids using a list
 pictures = []
