@@ -1,6 +1,6 @@
 import os
 from random import shuffle, randint
-from guizero import App, Box, Picture, PushButton, Text, warn, info, Window
+from guizero import App, Box, Picture, PushButton, Text, TextBox, warn, info, Window
 from operator import itemgetter
 import pickle
 
@@ -9,7 +9,9 @@ game_timer = 20
 rounds = 1
 correct_guesses = 0
 bonus_time = 10
-player = "One"
+player_one = ""
+player_two = ""
+current_player = ""
 high_scores = [
     ("Bob", 12),
     ("Mike", 2),
@@ -27,11 +29,12 @@ high_scores = [
 # TODO define players
 # changes player
 def change_player():
-    global player
-    if player == "One":
-        player = "Two"
+    global current_player
+
+    if current_player == player_one:
+        current_player = player_two
     else:
-        player = "One"
+        current_player = player_one
 
 
 # timer countdown / game over
@@ -44,16 +47,14 @@ def counter():
         # change player turn
         change_player()
         
-        # TODO change this to reflect player's name correctly
-        # stops timer and shows game over
+        # stops timer
         timer.cancel(counter)
         result.text_color = "black"
         result.value = "Game Over"
-        warn("Game Over", "You have ran out of time!\nFinal Score: " + score.value + 
-            "\n\nPlayer " + player + "'s turn.")
         
         # shows leaderboard
         leaderboard_display()
+
 
 # populates list of emojis and shuffles them
 def emoji_list():
@@ -61,6 +62,11 @@ def emoji_list():
     emojis = [os.path.join(emojis_dir, f) for f in os.listdir(emojis_dir) if os.path.isfile(os.path.join(emojis_dir, f))]
     shuffle(emojis)
 
+
+# initial game start
+# def initial_start():
+#     player_name_window.show(wait=True)
+    
 
 # leaderboard closed, starts new game
 def leaderboard_closed():
@@ -73,6 +79,8 @@ def leaderboard_display():
     # loads and displays high scores
     high_scores = []
     leaderboard.show(wait=True)
+
+    Text(leaderboard, "You have ran out of time!\nFinal Score: " + score.value + "\n\n", size=18)
 
     with open('highscores.txt', 'rb') as f:
         high_scores = pickle.load(f)
@@ -91,7 +99,7 @@ def leaderboard_display():
 def leaderboard_save():
     global high_scores
 
-    high_scores.append((player, int(score.value)))
+    high_scores.append((current_player, int(score.value)))
     high_scores = sorted(high_scores, key=itemgetter(1), reverse=True)[:10]
 
     with open('highscores.txt', 'wb') as f:
@@ -152,6 +160,9 @@ def new_game():
     
     # adds to round count
     rounds += 1
+
+    # displays player's turn
+    info("Player Turn", current_player + "'s turn.")
     
     # restarts game
     setup_round()
@@ -160,8 +171,33 @@ def new_game():
     timer.repeat(1000, counter)
 
 
+# sets names and starts game
+def set_names():
+    global player_one
+    global player_two
+    global player_one_name
+    global player_two_name
+    global current_player
+
+    player_one = player_one_name.value
+    player_two = player_two_name.value
+
+    random_player = randint(1,2)
+    if random_player == 1:
+        current_player = player_one
+    else:
+        current_player = player_two
+
+    # displays player's turn
+    info("Player Turn", current_player + "'s turn.")
+
+    setup_round()
+
+
 # sets a round up
 def setup_round():
+    player_name_window.hide()
+
     # makes a list of emojis
     emoji_list()
 
@@ -188,26 +224,31 @@ def setup_round():
     # Displays rounds played
     rounds_played.value = "Rounds played: " + str(rounds)
 
-
-# sets up widgets
 app = App("emoji match", width=420, height=574)
+
+# leader board window setup
+leaderboard = Window(app, title="High Scores")
+leaderboard.hide()
+
+# sets up widgets for player name entry
+player_name_window = Window(app, title="Enter player names")
+player_box = Box(player_name_window)
+player_one_label = Text(player_box, text="Player one: ", align="left")
+player_one_name = TextBox(player_box, align="left")
+player_two_label = Text(player_box, text="Player two: ", align="left")
+player_two_name = TextBox(player_box, align="left")
+PushButton(player_name_window, text="Start Game", command=set_names)
+
+# sets up game widgets
 rounds_played = Text(app, text="Rounds played: " + str(rounds))
 result = Text(app)
 game_box = Box(app)
 pictures_box = Box(game_box, layout="grid")
 buttons_box = Box(game_box, layout="grid")
 
-# leader board window setup
-leaderboard = Window(app, title="High Scores")
-leaderboard.hide()
-
 # setup for emoji directory and creates empty list to populate
 emojis_dir = "emojis"
 emojis = []
-
-# TODO change this to reflect players name
-# displays player's turn
-info("Player Turn", "Player " + player + "'s turn.")
 
 # creates the two grids using a list
 pictures = []
@@ -232,9 +273,6 @@ label = Text(scoreboard, text="Score: ", align="left")
 score = Text(scoreboard, text="0", align="left")
 bonus = Box(app)
 score_bonus = Text(bonus, text="", color="green")
-
-# sets up a round
-setup_round()
 
 # starts timer
 timer.value = game_timer
