@@ -51,6 +51,7 @@ def counter():
         # change player turn
         change_player()
         
+        # TODO change this to reflect player's name correctly
         # stops timer and shows game over
         timer.cancel(counter)
         result.text_color = "black"
