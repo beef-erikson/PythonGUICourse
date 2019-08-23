@@ -1,7 +1,9 @@
 import os
 from random import shuffle
-from guizero import App, Box, Picture, PushButton, Text, warn, info
+from guizero import App, Box, Picture, PushButton, Text, warn, info, Window
 from random import randint
+from operator import itemgetter
+import pickle
 
 # fields
 game_timer = 20
@@ -9,9 +11,21 @@ rounds = 1
 correct_guesses = 0
 bonus_time = 10
 player = "One"
-scores = []
+high_scores = [
+    ("Bob", 12),
+    ("Mike", 2),
+    ("Joe", 13),
+    ("Jane", 3),
+    ("Bill", 4),
+    ("Joe", 4), 
+    ("Michelle", 5),
+    ("Slick", 15),
+    ("Marie", 7),
+    ("Sally", 9),
+]
 
 
+# TODO define players
 # changes player
 def change_player():
     global player
@@ -25,9 +39,14 @@ def change_player():
 def counter():
     timer.value = int(timer.value) - 1
     if int(timer.value) == 0:
-        global game_timer
-        global correct_guesses
-        global rounds
+        global high_scores
+
+        # insert scores into file
+        high_scores.append((player, int(score.value)))
+        high_scores = sorted(high_scores, key=itemgetter(1), reverse=True)[:10]
+
+        with open('highscores.txt', 'wb') as f:
+            pickle.dump(high_scores, f)
 
         # change player turn
         change_player()
@@ -37,25 +56,10 @@ def counter():
         result.text_color = "black"
         result.value = "Game Over"
         warn("Game Over", "You have ran out of time!\nFinal Score: " + score.value + 
-            "\n\nPlayer " + str(player) + "'s turn.")
+            "\n\nPlayer " + player + "'s turn.")
         
-        # resets variable values
-        timer.value = game_timer
-        result.value = ""
-        score.value = "0"      
-        correct_guesses = 0
-        game_timer = 20
-        score_bonus.value = ""
-        
-        # adds to round count
-        rounds += 1
-        
-        # restarts game
-        setup_round()
-        
-        # starts new timer
-        timer.repeat(1000, counter)
-        
+        # shows leaderboard
+        leaderboard_display()
 
 # populates list of emojis and shuffles them
 def emoji_list():
@@ -64,9 +68,29 @@ def emoji_list():
     shuffle(emojis)
 
 
-# displays leaderboard
+# leaderboard closed, starts new game
+def leaderboard_closed():
+    leaderboard.hide()
+    new_game()
+
+
+# leaderboard window at game end
 def leaderboard_display():
-    global scores
+    # loads and displays high scores
+    high_scores = []
+    leaderboard.show(wait=True)
+
+    with open('highscores.txt', 'rb') as f:
+        high_scores = pickle.load(f)
+    
+    for high_score in high_scores:
+        Text(leaderboard, high_score)
+    
+    # starts a new game by hitting the button
+    PushButton(leaderboard, text="Next Player", command=new_game)
+
+    # closes everything if closed button is hit
+    leaderboard.when_closed = leaderboard_closed
 
 
 # sets result/score values if correct answer or not and creates a new round
@@ -75,18 +99,22 @@ def match_emoji(matched):
     
     #  resets score bonus text
     score_bonus.value = ""
+
+    # displays correct and increases score
     if matched:
         result.text_color = "green"
         result.value = "correct"
         score.value = int(score.value) + 1
-        
-        # bonus point for 3 correct guesses in a row
         correct_guesses += 1
+
+        # bonus time for 3 correct guesses in a row
         if correct_guesses == 3:
             global game_timer
             timer.value = int(timer.value) + bonus_time
             score_bonus.value = "BONUS - 3 correct in a row! " + str(bonus_time) + " seconds added to timer!"
             correct_guesses = 0
+
+    # displays incorrect and reduces score
     else:
         result.text_color = "red"
         result.value = "incorrect"
@@ -95,6 +123,35 @@ def match_emoji(matched):
     
     # resets board
     setup_round()
+
+
+def new_game():
+    global game_timer
+    global rounds
+    global correct_guesses
+    global leaderboard
+
+    # destroys and creates leaderboard window
+    leaderboard.destroy()
+    leaderboard = Window(app, title="High Scores")
+    leaderboard.hide()
+
+    # resets variable values
+    timer.value = game_timer
+    result.value = ""
+    score.value = "0"      
+    correct_guesses = 0
+    game_timer = 20
+    score_bonus.value = ""
+    
+    # adds to round count
+    rounds += 1
+    
+    # restarts game
+    setup_round()
+    
+    # starts new timer
+    timer.repeat(1000, counter)
 
 
 # sets a round up
@@ -134,12 +191,17 @@ game_box = Box(app)
 pictures_box = Box(game_box, layout="grid")
 buttons_box = Box(game_box, layout="grid")
 
+# leader board window setup
+leaderboard = Window(app, title="High Scores")
+leaderboard.hide()
+
 # setup for emoji directory and creates empty list to populate
 emojis_dir = "emojis"
 emojis = []
 
+# TODO change this to reflect players name
 # displays player's turn
-info("Player Turn", "Player " + str(player) + "'s turn.")
+info("Player Turn", "Player " + player + "'s turn.")
 
 # creates the two grids using a list
 pictures = []
