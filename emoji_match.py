@@ -38,15 +38,9 @@ def change_player():
 def counter():
     timer.value = int(timer.value) - 1
     if int(timer.value) == 0:
-        global high_scores
-
-        # insert scores into file
-        high_scores.append((player, int(score.value)))
-        high_scores = sorted(high_scores, key=itemgetter(1), reverse=True)[:10]
-
-        with open('highscores.txt', 'wb') as f:
-            pickle.dump(high_scores, f)
-
+        # saves leaderboard
+        leaderboard_save()
+        
         # change player turn
         change_player()
         
@@ -89,8 +83,19 @@ def leaderboard_display():
     # starts a new game by hitting the button
     PushButton(leaderboard, text="Next Player", command=new_game)
 
-    # closes everything if closed button is hit
+    # starts new game if closed button is hit
     leaderboard.when_closed = leaderboard_closed
+
+
+# saves leaderboard scores
+def leaderboard_save():
+    global high_scores
+
+    high_scores.append((player, int(score.value)))
+    high_scores = sorted(high_scores, key=itemgetter(1), reverse=True)[:10]
+
+    with open('highscores.txt', 'wb') as f:
+        pickle.dump(high_scores, f)
 
 
 # sets result/score values if correct answer or not and creates a new round
@@ -125,6 +130,7 @@ def match_emoji(matched):
     setup_round()
 
 
+# starts a new game
 def new_game():
     global game_timer
     global rounds
