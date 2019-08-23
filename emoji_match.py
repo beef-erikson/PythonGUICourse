@@ -1,7 +1,6 @@
 import os
-from random import shuffle
+from random import shuffle, randint
 from guizero import App, Box, Picture, PushButton, Text, warn, info, Window
-from random import randint
 from operator import itemgetter
 import pickle
 
