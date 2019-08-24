@@ -12,6 +12,8 @@ bonus_time = 10
 player_one = ""
 player_two = ""
 current_player = ""
+pictures = []
+buttons = []
 high_scores = [
     ("Bob", 12),
     ("Mike", 2),
@@ -26,7 +28,6 @@ high_scores = [
 ]
 
 
-# TODO define players
 # changes player
 def change_player():
     global current_player
@@ -61,12 +62,7 @@ def emoji_list():
     global emojis
     emojis = [os.path.join(emojis_dir, f) for f in os.listdir(emojis_dir) if os.path.isfile(os.path.join(emojis_dir, f))]
     shuffle(emojis)
-
-
-# initial game start
-# def initial_start():
-#     player_name_window.show(wait=True)
-    
+  
 
 # leaderboard closed, starts new game
 def leaderboard_closed():
@@ -80,8 +76,12 @@ def leaderboard_display():
     high_scores = []
     leaderboard.show(wait=True)
 
-    Text(leaderboard, "You have ran out of time!\nFinal Score: " + score.value + "\n\n", size=18)
+    # header text
+    Text(leaderboard, "You have ran out of time!\nFinal Score: " + score.value + "\n", size=18)
+    Text(leaderboard, "High Scores")
+    Text(leaderboard, "-----------")
 
+    # reads and displays leaderboard
     with open('highscores.txt', 'rb') as f:
         high_scores = pickle.load(f)
     
@@ -171,6 +171,21 @@ def new_game():
     timer.repeat(1000, counter)
 
 
+# sets up grids
+def set_grids():
+    global pictures
+    global buttons
+
+    # creates grids
+    for x in range(0,3):
+        for y in range(0,3):
+            picture = Picture(pictures_box, grid=[x,y])
+            pictures.append(picture)
+
+            button = PushButton(buttons_box, grid=[x,y])
+            buttons.append(button)
+
+
 # sets names and starts game
 def set_names():
     global player_one
@@ -188,15 +203,24 @@ def set_names():
     else:
         current_player = player_two
 
+    player_name_window.hide()
+
     # displays player's turn
     info("Player Turn", current_player + "'s turn.")
 
+    # sets up grids
+    set_grids()
+
+    # starts timer and sets round up
+    timer.value = game_timer
+    timer.repeat(1000, counter)
     setup_round()
 
 
 # sets a round up
 def setup_round():
-    player_name_window.hide()
+    global pictures
+    global buttons
 
     # makes a list of emojis
     emoji_list()
@@ -224,20 +248,32 @@ def setup_round():
     # Displays rounds played
     rounds_played.value = "Rounds played: " + str(rounds)
 
+
 app = App("emoji match", width=420, height=574)
 
 # leader board window setup
 leaderboard = Window(app, title="High Scores")
 leaderboard.hide()
 
-# sets up widgets for player name entry
+# sets up widgets for player name entry and displays rules
 player_name_window = Window(app, title="Enter player names")
+Text(player_name_window, "\n")
 player_box = Box(player_name_window)
 player_one_label = Text(player_box, text="Player one: ", align="left")
 player_one_name = TextBox(player_box, align="left")
-player_two_label = Text(player_box, text="Player two: ", align="left")
+player_two_label = Text(player_box, text="  Player two: ", align="left")
 player_two_name = TextBox(player_box, align="left")
+Text(player_name_window, "\n")
 PushButton(player_name_window, text="Start Game", command=set_names)
+Text(player_name_window, "\n\nEmoji Matching Game Rules", size=18)
+Text(player_name_window, "- There is exactly one emoji that is in both top and bottom grids")
+Text(player_name_window, "- Click on the button in the bottom grid that matches")
+Text(player_name_window, "- Correct responses grant you one point")
+Text(player_name_window, "- Incorrect responses take away one point")
+Text(player_name_window, "- 3 correct answers in a row awards bonus time of 10 seconds")
+Text(player_name_window, "- The game ends when your time runs out and the next player goes")
+Text(player_name_window, "\n\nCreated by Troy Martin - 2019")
+Text(player_name_window, "beef.erikson.studios@gmail.com")
 
 # sets up game widgets
 rounds_played = Text(app, text="Rounds played: " + str(rounds))
@@ -250,18 +286,6 @@ buttons_box = Box(game_box, layout="grid")
 emojis_dir = "emojis"
 emojis = []
 
-# creates the two grids using a list
-pictures = []
-buttons = []
-
-for x in range(0,3):
-    for y in range(0,3):
-        picture = Picture(pictures_box, grid=[x,y])
-        pictures.append(picture)
-
-        button = PushButton(buttons_box, grid=[x,y])
-        buttons.append(button)
-
 # sets timer text
 extra_features = Box(app)
 timerlabel = Text(extra_features, text="Time Left: ", align="left")
@@ -273,10 +297,6 @@ label = Text(scoreboard, text="Score: ", align="left")
 score = Text(scoreboard, text="0", align="left")
 bonus = Box(app)
 score_bonus = Text(bonus, text="", color="green")
-
-# starts timer
-timer.value = game_timer
-timer.repeat(1000, counter)
 
 # starts app
 app.display()
