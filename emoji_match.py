@@ -4,7 +4,7 @@ from guizero import App, Box, Picture, PushButton, Text, TextBox, warn, info, Wi
 from operator import itemgetter
 import pickle
 
-# fields
+"""Fields"""
 game_timer = 20
 rounds = 1
 correct_guesses = 0
@@ -28,7 +28,7 @@ high_scores = [
 ]
 
 
-# changes player
+"""Changes player"""
 def change_player():
     global current_player
 
@@ -38,7 +38,7 @@ def change_player():
         current_player = player_one
 
 
-# timer countdown / game over
+"""Timer countdown / game over"""
 def counter():
     timer.value = int(timer.value) - 1
     if int(timer.value) == 0:
@@ -57,20 +57,20 @@ def counter():
         leaderboard_display()
 
 
-# populates list of emojis and shuffles them
+""" Populates list of emojis and shuffles them"""
 def emoji_list():
     global emojis
     emojis = [os.path.join(emojis_dir, f) for f in os.listdir(emojis_dir) if os.path.isfile(os.path.join(emojis_dir, f))]
     shuffle(emojis)
-  
 
-# leaderboard closed, starts new game
+
+"""Leaderboard closed, starts new game"""
 def leaderboard_closed():
     leaderboard.hide()
     new_game()
 
 
-# leaderboard window at game end
+"""leaderboard window at game end"""
 def leaderboard_display():
     # loads and displays high scores
     high_scores = []
@@ -95,7 +95,7 @@ def leaderboard_display():
     leaderboard.when_closed = leaderboard_closed
 
 
-# saves leaderboard scores
+"""Saves leaderboard scores"""
 def leaderboard_save():
     global high_scores
 
@@ -106,7 +106,7 @@ def leaderboard_save():
         pickle.dump(high_scores, f)
 
 
-# sets result/score values if correct answer or not and creates a new round
+"""Sets result/score values if correct answer or not and creates a new round"""
 def match_emoji(matched):
     global correct_guesses
     
@@ -138,7 +138,7 @@ def match_emoji(matched):
     setup_round()
 
 
-# starts a new game
+"""Starts a new game"""
 def new_game():
     global game_timer
     global rounds
@@ -171,7 +171,7 @@ def new_game():
     timer.repeat(1000, counter)
 
 
-# sets up grids
+"""Sets up grids"""
 def set_grids():
     global pictures
     global buttons
@@ -186,7 +186,7 @@ def set_grids():
             buttons.append(button)
 
 
-# sets names and starts game
+"""Sets names and starts game"""
 def set_names():
     global player_one
     global player_two
@@ -217,7 +217,7 @@ def set_names():
     setup_round()
 
 
-# sets a round up
+"""Sets a round up"""
 def setup_round():
     global pictures
     global buttons

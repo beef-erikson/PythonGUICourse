@@ -2,7 +2,7 @@ from guizero import App, Text, PushButton
 
 counter = 120
 
-# Counts down and changes background color of the button every second
+"""Counts down and changes background color of the button every second"""
 def countdown():
     global counter
     counter -= 1

@@ -11,7 +11,7 @@ if player == 1:
 else:
     symbol = "O"
  
-# Button clicked, passes button to placePiece
+"""Button clicked, passes button to placePiece"""
 def clickTopLeft():
     placePiece(topLeft)
 
@@ -39,7 +39,8 @@ def clickBottomCenter():
 def clickBottomRight():
     placePiece(bottomRight)
 
-# Changes player symbol
+
+"""Changes player symbol"""
 def changeSymbol():
     global player
     global symbol
@@ -50,7 +51,8 @@ def changeSymbol():
         player = 1
         symbol = "X"
 
-# Check for win
+
+"""Check for win"""
 def checkWin():
     # Checks first row and first column wins
     if not topLeft.text == "  ":
@@ -76,7 +78,8 @@ def checkWin():
             app.info("Win!", "Player " + str(player) + " has won!")
             exit()
 
-# Places X or O
+
+"""Places X or O"""
 def placePiece(button):
     global player
     if button == topLeft and topLeft.text == "  ":

@@ -3,6 +3,8 @@ from guizero import App, Text, TextBox, PushButton, info
 app = App()
 app.title = "Password Verification"
 
+
+"""Checks password"""
 def btn_checkpass_clicked():
     if (txt_firstpass.value == txt_secondpass.value):
         info("Match","The passwords match!")

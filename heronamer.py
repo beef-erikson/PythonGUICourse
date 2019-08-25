@@ -17,7 +17,7 @@ box4 = Box(app, width='fill')
 box4.bg = 'green'
 box4.font = 'New Times Roman'
 
-# Event functions
+"""Event functions"""
 def make_hero_name():
     adjective = cmb_adjective.value
     colour = txt_colour.value
@@ -32,6 +32,8 @@ def make_hero_name():
         power = chk_power3.text
     lbl_output.value = "You are... The " + hero + " that " + power + "."
 
+
+"""Enable dark mode"""
 def make_darkmode():
     app.bg = "Black"
     app.text_color = "White"

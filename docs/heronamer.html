@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.3" />
+<title>GUICourse.heronamer API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>GUICourse.heronamer</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">from guizero import App, TextBox, Text, ButtonGroup, PushButton, Combo, CheckBox, ListBox, Picture, Box
+import PIL
+
+# Sets up app
+app = App(title=&#34;Hero-o-matic&#34;)
+app.height=400
+app.width=400
+app.bg = &#39;black&#39;
+
+box1 = Box(app, align=&#39;left&#39;)
+box1.bg = &#39;dark slate gray&#39;
+box2 = Box(app, border=1)
+box2.bg = &#39;slategray3&#39;
+box3 = Box(app)
+box3.bg = &#39;dark slate gray&#39;
+box4 = Box(app, width=&#39;fill&#39;)
+box4.bg = &#39;green&#39;
+box4.font = &#39;New Times Roman&#39;
+
+&#34;&#34;&#34;Event functions&#34;&#34;&#34;
+def make_hero_name():
+    adjective = cmb_adjective.value
+    colour = txt_colour.value
+    animal = cmb_animal.value
+    surname = lst_surname.value
+    hero = adjective + &#39; &#39; + colour + &#39; &#39; + animal + &#39; &#39; + surname
+    if (chk_power1.value):
+        power = chk_power1.text
+    if (chk_power2.value):
+        power = chk_power2.text
+    if (chk_power3.value):
+        power = chk_power3.text
+    lbl_output.value = &#34;You are... The &#34; + hero + &#34; that &#34; + power + &#34;.&#34;
+
+
+&#34;&#34;&#34;Enable dark mode&#34;&#34;&#34;
+def make_darkmode():
+    app.bg = &#34;Black&#34;
+    app.text_color = &#34;White&#34;
+
+# GUI Widgets
+Picture(box2, image=&#34;./GUICourse/me.png&#34;, height=50, width=50)
+
+chk_darkmode = CheckBox(box2, text=&#34;Dark Mode&#34;, command=make_darkmode) 
+
+message1 = Text(box3, text=&#34;Choose an adjective...&#34;)
+cmb_adjective = Combo(box3, options=[&#34;Amazing&#34;, &#34;Bonny&#34;, &#34;Charming&#34;, &#34;Delightful&#34;, &#34;Sad&#34;, &#34;Spectacular&#34;, &#34;Happy&#34;], 
+    selected=&#34;Amazing&#34;)
+
+message2 = Text(box3, text=&#34;Enter a colour&#34;)
+txt_colour = TextBox(box3)
+
+message3 = Text(box3, text=&#34;Pick an animal&#34;)
+cmb_animal = Combo(box3, options=[&#34;Aardvark&#34;, &#34;Badger&#34;, &#34;Cat&#34;, &#34;Dolphin&#34;, &#34;Velociraptor&#34;, &#34;Dog&#34;, &#34;Elephant&#34;, &#34;Lizard&#34;],
+    selected=&#34;Aardvark&#34;)
+
+message4 = Text(box3, text=&#34;Add a super-power&#34;)
+chk_power1 = CheckBox(box3, text=&#34;can fly&#34;,)
+chk_power2 = CheckBox(box3, text=&#34;has x-ray vision&#34;)
+chk_power3 = CheckBox(box3, text=&#34;reads minds&#34;)
+
+message5 = Text(box1, text=&#34;Choose a surname&#34;)
+lst_surname = ListBox(box1, items=[&#34;the First&#34;, &#34;the Second&#34;, &#34;the Third&#34;, &#34;the Fourth&#34;, &#34;the Fifth&#34;,
+ &#34;the Sixth&#34;, &#34;the Seventh&#34;, &#34;the Eigth&#34;, &#34;the Ninth&#34;], selected=&#34;the First&#34;, height=&#39;fill&#39;, width=&#39;fill&#39;)
+
+btn_make_name = PushButton(box4, text=&#34;Make me a hero name&#34;, command=make_hero_name)
+lbl_output = Text(box4, text=&#34;A hero name will appear here&#34;)
+
+# Sets up display and listener
+app.display()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="GUICourse.heronamer.make_darkmode"><code class="name flex">
+<span>def <span class="ident">make_darkmode</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def make_darkmode():
+    app.bg = &#34;Black&#34;
+    app.text_color = &#34;White&#34;</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.heronamer.make_hero_name"><code class="name flex">
+<span>def <span class="ident">make_hero_name</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def make_hero_name():
+    adjective = cmb_adjective.value
+    colour = txt_colour.value
+    animal = cmb_animal.value
+    surname = lst_surname.value
+    hero = adjective + &#39; &#39; + colour + &#39; &#39; + animal + &#39; &#39; + surname
+    if (chk_power1.value):
+        power = chk_power1.text
+    if (chk_power2.value):
+        power = chk_power2.text
+    if (chk_power3.value):
+        power = chk_power3.text
+    lbl_output.value = &#34;You are... The &#34; + hero + &#34; that &#34; + power + &#34;.&#34;</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="GUICourse" href="index.html">GUICourse</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="GUICourse.heronamer.make_darkmode" href="#GUICourse.heronamer.make_darkmode">make_darkmode</a></code></li>
+<li><code><a title="GUICourse.heronamer.make_hero_name" href="#GUICourse.heronamer.make_hero_name">make_hero_name</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

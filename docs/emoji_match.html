@@ -1,0 +1,675 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+<meta name="generator" content="pdoc 0.6.3" />
+<title>GUICourse.emoji_match API documentation</title>
+<meta name="description" content="" />
+<link href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css' rel='stylesheet'>
+<link href='https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/8.0.0/sanitize.min.css' rel='stylesheet'>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css" rel="stylesheet">
+<style>.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}a:hover{color:#e82}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{font-weight:bold}#index h4 + ul{margin-bottom:.6em}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase;cursor:pointer}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.item .name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul{padding-left:1.5em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>GUICourse.emoji_match</code></h1>
+</header>
+<section id="section-intro">
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">import os
+from random import shuffle, randint
+from guizero import App, Box, Picture, PushButton, Text, TextBox, warn, info, Window
+from operator import itemgetter
+import pickle
+
+&#34;&#34;&#34;Fields&#34;&#34;&#34;
+game_timer = 20
+rounds = 1
+correct_guesses = 0
+bonus_time = 10
+player_one = &#34;&#34;
+player_two = &#34;&#34;
+current_player = &#34;&#34;
+pictures = []
+buttons = []
+high_scores = [
+    (&#34;Bob&#34;, 12),
+    (&#34;Mike&#34;, 2),
+    (&#34;Joe&#34;, 13),
+    (&#34;Jane&#34;, 3),
+    (&#34;Bill&#34;, 4),
+    (&#34;Joe&#34;, 4), 
+    (&#34;Michelle&#34;, 5),
+    (&#34;Slick&#34;, 15),
+    (&#34;Marie&#34;, 7),
+    (&#34;Sally&#34;, 9),
+]
+
+
+&#34;&#34;&#34;Changes player&#34;&#34;&#34;
+def change_player():
+    global current_player
+
+    if current_player == player_one:
+        current_player = player_two
+    else:
+        current_player = player_one
+
+
+&#34;&#34;&#34;Timer countdown / game over&#34;&#34;&#34;
+def counter():
+    timer.value = int(timer.value) - 1
+    if int(timer.value) == 0:
+        # saves leaderboard
+        leaderboard_save()
+        
+        # change player turn
+        change_player()
+        
+        # stops timer
+        timer.cancel(counter)
+        result.text_color = &#34;black&#34;
+        result.value = &#34;Game Over&#34;
+        
+        # shows leaderboard
+        leaderboard_display()
+
+
+&#34;&#34;&#34; Populates list of emojis and shuffles them&#34;&#34;&#34;
+def emoji_list():
+    global emojis
+    emojis = [os.path.join(emojis_dir, f) for f in os.listdir(emojis_dir) if os.path.isfile(os.path.join(emojis_dir, f))]
+    shuffle(emojis)
+
+
+&#34;&#34;&#34;Leaderboard closed, starts new game&#34;&#34;&#34;
+def leaderboard_closed():
+    leaderboard.hide()
+    new_game()
+
+
+&#34;&#34;&#34;leaderboard window at game end&#34;&#34;&#34;
+def leaderboard_display():
+    # loads and displays high scores
+    high_scores = []
+    leaderboard.show(wait=True)
+
+    # header text
+    Text(leaderboard, &#34;You have ran out of time!\nFinal Score: &#34; + score.value + &#34;\n&#34;, size=18)
+    Text(leaderboard, &#34;High Scores&#34;)
+    Text(leaderboard, &#34;-----------&#34;)
+
+    # reads and displays leaderboard
+    with open(&#39;highscores.txt&#39;, &#39;rb&#39;) as f:
+        high_scores = pickle.load(f)
+    
+    for high_score in high_scores:
+        Text(leaderboard, high_score)
+    
+    # starts a new game by hitting the button
+    PushButton(leaderboard, text=&#34;Next Player&#34;, command=new_game)
+
+    # starts new game if closed button is hit
+    leaderboard.when_closed = leaderboard_closed
+
+
+&#34;&#34;&#34;Saves leaderboard scores&#34;&#34;&#34;
+def leaderboard_save():
+    global high_scores
+
+    high_scores.append((current_player, int(score.value)))
+    high_scores = sorted(high_scores, key=itemgetter(1), reverse=True)[:10]
+
+    with open(&#39;highscores.txt&#39;, &#39;wb&#39;) as f:
+        pickle.dump(high_scores, f)
+
+
+&#34;&#34;&#34;Sets result/score values if correct answer or not and creates a new round&#34;&#34;&#34;
+def match_emoji(matched):
+    global correct_guesses
+    
+    #  resets score bonus text
+    score_bonus.value = &#34;&#34;
+
+    # displays correct and increases score
+    if matched:
+        result.text_color = &#34;green&#34;
+        result.value = &#34;correct&#34;
+        score.value = int(score.value) + 1
+        correct_guesses += 1
+
+        # bonus time for 3 correct guesses in a row
+        if correct_guesses == 3:
+            global game_timer
+            timer.value = int(timer.value) + bonus_time
+            score_bonus.value = &#34;BONUS - 3 correct in a row! &#34; + str(bonus_time) + &#34; seconds added to timer!&#34;
+            correct_guesses = 0
+
+    # displays incorrect and reduces score
+    else:
+        result.text_color = &#34;red&#34;
+        result.value = &#34;incorrect&#34;
+        score.value = int(score.value) - 1
+        correct_guesses = 0
+    
+    # resets board
+    setup_round()
+
+
+&#34;&#34;&#34;Starts a new game&#34;&#34;&#34;
+def new_game():
+    global game_timer
+    global rounds
+    global correct_guesses
+    global leaderboard
+
+    # destroys and creates leaderboard window
+    leaderboard.destroy()
+    leaderboard = Window(app, title=&#34;High Scores&#34;)
+    leaderboard.hide()
+
+    # resets variable values
+    timer.value = game_timer
+    result.value = &#34;&#34;
+    score.value = &#34;0&#34;      
+    correct_guesses = 0
+    game_timer = 20
+    score_bonus.value = &#34;&#34;
+    
+    # adds to round count
+    rounds += 1
+
+    # displays player&#39;s turn
+    info(&#34;Player Turn&#34;, current_player + &#34;&#39;s turn.&#34;)
+    
+    # restarts game
+    setup_round()
+    
+    # starts new timer
+    timer.repeat(1000, counter)
+
+
+&#34;&#34;&#34;Sets up grids&#34;&#34;&#34;
+def set_grids():
+    global pictures
+    global buttons
+
+    # creates grids
+    for x in range(0,3):
+        for y in range(0,3):
+            picture = Picture(pictures_box, grid=[x,y])
+            pictures.append(picture)
+
+            button = PushButton(buttons_box, grid=[x,y])
+            buttons.append(button)
+
+
+&#34;&#34;&#34;Sets names and starts game&#34;&#34;&#34;
+def set_names():
+    global player_one
+    global player_two
+    global player_one_name
+    global player_two_name
+    global current_player
+
+    player_one = player_one_name.value
+    player_two = player_two_name.value
+
+    random_player = randint(1,2)
+    if random_player == 1:
+        current_player = player_one
+    else:
+        current_player = player_two
+
+    player_name_window.hide()
+
+    # displays player&#39;s turn
+    info(&#34;Player Turn&#34;, current_player + &#34;&#39;s turn.&#34;)
+
+    # sets up grids
+    set_grids()
+
+    # starts timer and sets round up
+    timer.value = game_timer
+    timer.repeat(1000, counter)
+    setup_round()
+
+
+&#34;&#34;&#34;Sets a round up&#34;&#34;&#34;
+def setup_round():
+    global pictures
+    global buttons
+
+    # makes a list of emojis
+    emoji_list()
+
+    # sets pictures for each grid
+    for picture in pictures:
+        picture.image = emojis.pop()
+
+    for button in buttons:
+        button.image = emojis.pop()
+        button.update_command(match_emoji, [False])
+
+    # choses a new emoji to be matched and sets to a random cell in each grid
+    matched_emoji = emojis.pop()
+
+    random_picture = randint(0,8)
+    pictures[random_picture].image = matched_emoji
+
+    random_button = randint(0,8)
+    buttons[random_button].image = matched_emoji
+
+    # sets the correct button to report true (the matched cell)
+    buttons[random_button].update_command(match_emoji, [True])
+
+    # Displays rounds played
+    rounds_played.value = &#34;Rounds played: &#34; + str(rounds)
+
+
+app = App(&#34;emoji match&#34;, width=420, height=574)
+
+# leader board window setup
+leaderboard = Window(app, title=&#34;High Scores&#34;)
+leaderboard.hide()
+
+# sets up widgets for player name entry and displays rules
+player_name_window = Window(app, title=&#34;Enter player names&#34;)
+Text(player_name_window, &#34;\n&#34;)
+player_box = Box(player_name_window)
+player_one_label = Text(player_box, text=&#34;Player one: &#34;, align=&#34;left&#34;)
+player_one_name = TextBox(player_box, align=&#34;left&#34;)
+player_two_label = Text(player_box, text=&#34;  Player two: &#34;, align=&#34;left&#34;)
+player_two_name = TextBox(player_box, align=&#34;left&#34;)
+Text(player_name_window, &#34;\n&#34;)
+PushButton(player_name_window, text=&#34;Start Game&#34;, command=set_names)
+Text(player_name_window, &#34;\n\nEmoji Matching Game Rules&#34;, size=18)
+Text(player_name_window, &#34;- There is exactly one emoji that is in both top and bottom grids&#34;)
+Text(player_name_window, &#34;- Click on the button in the bottom grid that matches&#34;)
+Text(player_name_window, &#34;- Correct responses grant you one point&#34;)
+Text(player_name_window, &#34;- Incorrect responses take away one point&#34;)
+Text(player_name_window, &#34;- 3 correct answers in a row awards bonus time of 10 seconds&#34;)
+Text(player_name_window, &#34;- The game ends when your time runs out and the next player goes&#34;)
+Text(player_name_window, &#34;\n\nCreated by Troy Martin - 2019&#34;)
+Text(player_name_window, &#34;beef.erikson.studios@gmail.com&#34;)
+
+# sets up game widgets
+rounds_played = Text(app, text=&#34;Rounds played: &#34; + str(rounds))
+result = Text(app)
+game_box = Box(app)
+pictures_box = Box(game_box, layout=&#34;grid&#34;)
+buttons_box = Box(game_box, layout=&#34;grid&#34;)
+
+# setup for emoji directory and creates empty list to populate
+emojis_dir = &#34;emojis&#34;
+emojis = []
+
+# sets timer text
+extra_features = Box(app)
+timerlabel = Text(extra_features, text=&#34;Time Left: &#34;, align=&#34;left&#34;)
+timer = Text(extra_features, text=&#34;Get Ready&#34;, align=&#34;left&#34;)
+
+# sets score and bonus texts
+scoreboard = Box(app)
+label = Text(scoreboard, text=&#34;Score: &#34;, align=&#34;left&#34;)
+score = Text(scoreboard, text=&#34;0&#34;, align=&#34;left&#34;)
+bonus = Box(app)
+score_bonus = Text(bonus, text=&#34;&#34;, color=&#34;green&#34;)
+
+# starts app
+app.display()</code></pre>
+</details>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="GUICourse.emoji_match.high_scores"><code class="name">var <span class="ident">high_scores</span></code></dt>
+<dd>
+<section class="desc"><p>Changes player</p></section>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="GUICourse.emoji_match.change_player"><code class="name flex">
+<span>def <span class="ident">change_player</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def change_player():
+    global current_player
+
+    if current_player == player_one:
+        current_player = player_two
+    else:
+        current_player = player_one</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.counter"><code class="name flex">
+<span>def <span class="ident">counter</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def counter():
+    timer.value = int(timer.value) - 1
+    if int(timer.value) == 0:
+        # saves leaderboard
+        leaderboard_save()
+        
+        # change player turn
+        change_player()
+        
+        # stops timer
+        timer.cancel(counter)
+        result.text_color = &#34;black&#34;
+        result.value = &#34;Game Over&#34;
+        
+        # shows leaderboard
+        leaderboard_display()</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.emoji_list"><code class="name flex">
+<span>def <span class="ident">emoji_list</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def emoji_list():
+    global emojis
+    emojis = [os.path.join(emojis_dir, f) for f in os.listdir(emojis_dir) if os.path.isfile(os.path.join(emojis_dir, f))]
+    shuffle(emojis)</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.leaderboard_closed"><code class="name flex">
+<span>def <span class="ident">leaderboard_closed</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def leaderboard_closed():
+    leaderboard.hide()
+    new_game()</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.leaderboard_display"><code class="name flex">
+<span>def <span class="ident">leaderboard_display</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def leaderboard_display():
+    # loads and displays high scores
+    high_scores = []
+    leaderboard.show(wait=True)
+
+    # header text
+    Text(leaderboard, &#34;You have ran out of time!\nFinal Score: &#34; + score.value + &#34;\n&#34;, size=18)
+    Text(leaderboard, &#34;High Scores&#34;)
+    Text(leaderboard, &#34;-----------&#34;)
+
+    # reads and displays leaderboard
+    with open(&#39;highscores.txt&#39;, &#39;rb&#39;) as f:
+        high_scores = pickle.load(f)
+    
+    for high_score in high_scores:
+        Text(leaderboard, high_score)
+    
+    # starts a new game by hitting the button
+    PushButton(leaderboard, text=&#34;Next Player&#34;, command=new_game)
+
+    # starts new game if closed button is hit
+    leaderboard.when_closed = leaderboard_closed</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.leaderboard_save"><code class="name flex">
+<span>def <span class="ident">leaderboard_save</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def leaderboard_save():
+    global high_scores
+
+    high_scores.append((current_player, int(score.value)))
+    high_scores = sorted(high_scores, key=itemgetter(1), reverse=True)[:10]
+
+    with open(&#39;highscores.txt&#39;, &#39;wb&#39;) as f:
+        pickle.dump(high_scores, f)</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.match_emoji"><code class="name flex">
+<span>def <span class="ident">match_emoji</span></span>(<span>matched)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def match_emoji(matched):
+    global correct_guesses
+    
+    #  resets score bonus text
+    score_bonus.value = &#34;&#34;
+
+    # displays correct and increases score
+    if matched:
+        result.text_color = &#34;green&#34;
+        result.value = &#34;correct&#34;
+        score.value = int(score.value) + 1
+        correct_guesses += 1
+
+        # bonus time for 3 correct guesses in a row
+        if correct_guesses == 3:
+            global game_timer
+            timer.value = int(timer.value) + bonus_time
+            score_bonus.value = &#34;BONUS - 3 correct in a row! &#34; + str(bonus_time) + &#34; seconds added to timer!&#34;
+            correct_guesses = 0
+
+    # displays incorrect and reduces score
+    else:
+        result.text_color = &#34;red&#34;
+        result.value = &#34;incorrect&#34;
+        score.value = int(score.value) - 1
+        correct_guesses = 0
+    
+    # resets board
+    setup_round()</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.new_game"><code class="name flex">
+<span>def <span class="ident">new_game</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def new_game():
+    global game_timer
+    global rounds
+    global correct_guesses
+    global leaderboard
+
+    # destroys and creates leaderboard window
+    leaderboard.destroy()
+    leaderboard = Window(app, title=&#34;High Scores&#34;)
+    leaderboard.hide()
+
+    # resets variable values
+    timer.value = game_timer
+    result.value = &#34;&#34;
+    score.value = &#34;0&#34;      
+    correct_guesses = 0
+    game_timer = 20
+    score_bonus.value = &#34;&#34;
+    
+    # adds to round count
+    rounds += 1
+
+    # displays player&#39;s turn
+    info(&#34;Player Turn&#34;, current_player + &#34;&#39;s turn.&#34;)
+    
+    # restarts game
+    setup_round()
+    
+    # starts new timer
+    timer.repeat(1000, counter)</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.set_grids"><code class="name flex">
+<span>def <span class="ident">set_grids</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def set_grids():
+    global pictures
+    global buttons
+
+    # creates grids
+    for x in range(0,3):
+        for y in range(0,3):
+            picture = Picture(pictures_box, grid=[x,y])
+            pictures.append(picture)
+
+            button = PushButton(buttons_box, grid=[x,y])
+            buttons.append(button)</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.set_names"><code class="name flex">
+<span>def <span class="ident">set_names</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def set_names():
+    global player_one
+    global player_two
+    global player_one_name
+    global player_two_name
+    global current_player
+
+    player_one = player_one_name.value
+    player_two = player_two_name.value
+
+    random_player = randint(1,2)
+    if random_player == 1:
+        current_player = player_one
+    else:
+        current_player = player_two
+
+    player_name_window.hide()
+
+    # displays player&#39;s turn
+    info(&#34;Player Turn&#34;, current_player + &#34;&#39;s turn.&#34;)
+
+    # sets up grids
+    set_grids()
+
+    # starts timer and sets round up
+    timer.value = game_timer
+    timer.repeat(1000, counter)
+    setup_round()</code></pre>
+</details>
+</dd>
+<dt id="GUICourse.emoji_match.setup_round"><code class="name flex">
+<span>def <span class="ident">setup_round</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<section class="desc"></section>
+<details class="source">
+<summary>Source code</summary>
+<pre><code class="python">def setup_round():
+    global pictures
+    global buttons
+
+    # makes a list of emojis
+    emoji_list()
+
+    # sets pictures for each grid
+    for picture in pictures:
+        picture.image = emojis.pop()
+
+    for button in buttons:
+        button.image = emojis.pop()
+        button.update_command(match_emoji, [False])
+
+    # choses a new emoji to be matched and sets to a random cell in each grid
+    matched_emoji = emojis.pop()
+
+    random_picture = randint(0,8)
+    pictures[random_picture].image = matched_emoji
+
+    random_button = randint(0,8)
+    buttons[random_button].image = matched_emoji
+
+    # sets the correct button to report true (the matched cell)
+    buttons[random_button].update_command(match_emoji, [True])
+
+    # Displays rounds played
+    rounds_played.value = &#34;Rounds played: &#34; + str(rounds)</code></pre>
+</details>
+</dd>
+</dl>
+</section>
+<section>
+</section>
+</article>
+<nav id="sidebar">
+<h1>Index</h1>
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3>Super-module</h3>
+<ul>
+<li><code><a title="GUICourse" href="index.html">GUICourse</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="">
+<li><code><a title="GUICourse.emoji_match.high_scores" href="#GUICourse.emoji_match.high_scores">high_scores</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="two-column">
+<li><code><a title="GUICourse.emoji_match.change_player" href="#GUICourse.emoji_match.change_player">change_player</a></code></li>
+<li><code><a title="GUICourse.emoji_match.counter" href="#GUICourse.emoji_match.counter">counter</a></code></li>
+<li><code><a title="GUICourse.emoji_match.emoji_list" href="#GUICourse.emoji_match.emoji_list">emoji_list</a></code></li>
+<li><code><a title="GUICourse.emoji_match.leaderboard_closed" href="#GUICourse.emoji_match.leaderboard_closed">leaderboard_closed</a></code></li>
+<li><code><a title="GUICourse.emoji_match.leaderboard_display" href="#GUICourse.emoji_match.leaderboard_display">leaderboard_display</a></code></li>
+<li><code><a title="GUICourse.emoji_match.leaderboard_save" href="#GUICourse.emoji_match.leaderboard_save">leaderboard_save</a></code></li>
+<li><code><a title="GUICourse.emoji_match.match_emoji" href="#GUICourse.emoji_match.match_emoji">match_emoji</a></code></li>
+<li><code><a title="GUICourse.emoji_match.new_game" href="#GUICourse.emoji_match.new_game">new_game</a></code></li>
+<li><code><a title="GUICourse.emoji_match.set_grids" href="#GUICourse.emoji_match.set_grids">set_grids</a></code></li>
+<li><code><a title="GUICourse.emoji_match.set_names" href="#GUICourse.emoji_match.set_names">set_names</a></code></li>
+<li><code><a title="GUICourse.emoji_match.setup_round" href="#GUICourse.emoji_match.setup_round">setup_round</a></code></li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc"><cite>pdoc</cite> 0.6.3</a>.</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+</body>
+</html>

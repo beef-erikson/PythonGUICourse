@@ -4,24 +4,26 @@ from guizero import App, TextBox, PushButton, Box, Combo, Slider, Text, MenuBar
 is_edited = False
 
 
-# Opens file
+"""Opens file"""
 def open_file():
     with open(file_name.value, "r") as file:
         editor.value = file.read()
 
-# Saves file
+
+"""Saves file"""
 def save_file():
     with open(file_name.value, "w") as file:
         file.write(editor.value)
     global is_edited
     is_edited = False
 
-# Text has been edited
+
+"""Text has been edited"""
 def text_edited():
     global is_edited
     is_edited = True
 
-# Exits program
+"""Exits program"""
 def exit_app():
     if is_edited:
         if app.yesno("Close", "File has not been saved, are you sure you want to quit?"):
@@ -29,25 +31,30 @@ def exit_app():
     else:
         app.destroy()
 
-# Changes font
+
+"""Changes font"""
 def change_font():
     editor.font = font.value
 
-# Changes font size
+
+"""Changes font size"""
 def change_font_size():
     editor.text_size = size.value
     editor.resize(1, 1)
     editor.resize('fill', 'fill')
         
-# Changes font color
+
+"""Changes font color"""
 def change_font_color():
     editor.text_color = color.value
 
-# Change background color
+
+"""Change background color"""
 def change_background_color():
     editor.bg = color_background.value
 
-# Enables Dark Mode
+
+"""Enables Dark Mode"""
 def dark_mode():
     app.bg = 'black'
     app.text_color = 'white'
