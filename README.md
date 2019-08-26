@@ -12,5 +12,5 @@ The ones worth looking at:
 ![Tic-Tac-Toe](https://i.imgur.com/n8KrIPR.png)<br />
 [Tic-Tac-Toe](https://github.com/beef-erikson/PythonGUICourse/blob/master/tic_tac_toe.py)
 
-![Simple Text Editor](https://i.imgur.com/1MHEZzT.png)
+![Simple Text Editor](https://i.imgur.com/1MHEZzT.png)<br />
 [Simple Text Editor](https://github.com/beef-erikson/PythonGUICourse/blob/master/text_editor.py)
